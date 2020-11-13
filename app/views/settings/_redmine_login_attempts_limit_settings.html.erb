@@ -2,15 +2,15 @@
   <tbody>
     <tr>
       <th><%= l('settings.attempts_limit') %></th>
-      <td><%= text_field_tag 'settings[attempts_limit]', settings[:attempts_limit] %></td>
+      <td><%= text_field_tag 'settings[attempts_limit]', settings['attempts_limit'] %></td>
     </tr>
     <tr>
       <th><%= l('settings.block_minutes') %></th>
-      <td><%= text_field_tag 'settings[block_minutes]', settings[:block_minutes] %></td>
+      <td><%= text_field_tag 'settings[block_minutes]', settings['block_minutes'] %></td>
     </tr>
     <tr>
       <th><%= l('settings.blocked_notification') %></th>
-      <td><%= check_box_tag 'settings[blocked_notification]', true, settings[:blocked_notification] %></td>
+      <td><%= check_box_tag 'settings[blocked_notification]', true, settings['blocked_notification'] %></td>
     </tr>
     <tr>
       <th><%= l('settings.block_clear') %></th>

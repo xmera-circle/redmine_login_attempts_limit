@@ -14,7 +14,7 @@ Metrics/PerceivedComplexity:
   Max: 8
 
 Metrics/LineLength:
-  Max: 99
+  Max: 120
 
 Documentation:
   Enabled: false

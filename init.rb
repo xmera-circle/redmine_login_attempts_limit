@@ -7,5 +7,9 @@ Redmine::Plugin.register :redmine_login_attempts_limit do
   description 'Login attempts limit plugin for Redmine'
   version '0.1.1'
   url 'https://github.com/RegioHelden/redmine_login_attempts_limit'
-  settings default: { 'attempts_limit' => 3, 'block_minutes' => 60, 'blocked_notification' => true }, partial: 'settings/redmine_login_attempts_limit_settings'
+  settings default: {
+    'attempts_limit' => 3,
+    'block_minutes' => 60,
+    'blocked_notification' => true
+  }, partial: 'settings/redmine_login_attempts_limit_settings'
 end

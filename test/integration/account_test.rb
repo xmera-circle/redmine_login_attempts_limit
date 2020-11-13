@@ -7,11 +7,11 @@ class AccountTest < Redmine::IntegrationTest
     Setting.plugin_redmine_login_attempts_limit[:attempts_limit] = '3'
     User.anonymous
   end
-  
+
   def teardown
     RedmineLoginAttemptsLimit::InvalidAccounts.clear
   end
-  
+
   def test_login
     get '/login'
     2.times { post '/login', username: 'admin', password: '' }
@@ -31,11 +31,11 @@ class AccountTest < Redmine::IntegrationTest
   def test_lost_password
     get '/login'
     3.times { post '/login', username: 'admin', password: '' }
-    
+
     Token.delete_all
     get '/account/lost_password'
     post '/account/lost_password', mail: 'admin@somenet.foo'
-    
+
     token = Token.first
     get '/account/lost_password', token: token.value
     post '/account/lost_password',

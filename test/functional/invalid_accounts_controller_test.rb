@@ -6,7 +6,7 @@ class InvalidAccountsControllerTest < ActionController::TestCase
   def setup
     User.current = nil
   end
-  
+
   def test_clear
     xhr :post, :clear
     assert_response :unauthorized

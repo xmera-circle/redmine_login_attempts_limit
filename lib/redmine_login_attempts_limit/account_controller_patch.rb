@@ -37,11 +37,12 @@ module RedmineLoginAttemptsLimit
 
     def lost_password_with_login_attempts_limit
       if Setting.lost_password? && request.post?
-        token = Token.find_token("recovery", params[:token].to_s)
-        if token && (!token.expired?)
+        token = Token.find_token('recovery', params[:token].to_s)
+        if token && !token.expired?
           user = token.user
           if user && user.active?
-            user.password, user.password_confirmation = params[:new_password], params[:new_password_confirmation]
+            user.password = params[:new_password]
+            user.password_confirmation = params[:new_password_confirmation]
             InvalidAccounts.clear(user.login) if user.valid?
           end
         end

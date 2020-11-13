@@ -13,7 +13,7 @@ class InvalidAccountsTest < ActiveSupport::TestCase
     Setting.plugin_redmine_login_attempts_limit[:attempts_limit] = '3'
     Setting.plugin_redmine_login_attempts_limit[:block_minutes]  = '60'
   end
-  
+
   def teardown
     InvalidAccounts.clear
   end
@@ -26,7 +26,7 @@ class InvalidAccountsTest < ActiveSupport::TestCase
     InvalidAccounts.update('admin')
     assert_equal 2, InvalidAccounts.status[:admin][:failed_count]
   end
-  
+
   def test_failed_count
     InvalidAccounts.update('admin')
     assert_equal 1, InvalidAccounts.failed_count('admin')
@@ -36,7 +36,7 @@ class InvalidAccountsTest < ActiveSupport::TestCase
   def test_attempts_limit
     Setting.plugin_redmine_login_attempts_limit[:attempts_limit] = '10'
     assert_equal 10, InvalidAccounts.attempts_limit
-    
+
     Setting.plugin_redmine_login_attempts_limit[:attempts_limit] = '0'
     assert_equal 1, InvalidAccounts.attempts_limit
   end
@@ -53,7 +53,7 @@ class InvalidAccountsTest < ActiveSupport::TestCase
     InvalidAccounts.update('user1')
     InvalidAccounts.update('user2')
     InvalidAccounts.update('user3')
-    
+
     InvalidAccounts.clear('user2')
     assert_not InvalidAccounts.status.key?(:user2)
     assert_equal 2, InvalidAccounts.status.count
@@ -67,7 +67,7 @@ class InvalidAccountsTest < ActiveSupport::TestCase
     InvalidAccounts.update('user2')
     InvalidAccounts.update('user3')
 
-    InvalidAccounts.status[:user2][:updated_at] -= (60*60)+1
+    InvalidAccounts.status[:user2][:updated_at] -= (60 * 60) + 1
     InvalidAccounts.clean_expired
     assert_not InvalidAccounts.status.key?(:user2)
     assert_equal 2, InvalidAccounts.status.count

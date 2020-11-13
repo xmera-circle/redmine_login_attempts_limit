@@ -1,14 +1,14 @@
 module RedmineLoginAttemptsLimit
   module InvalidAccounts
-    @status = {}
+    @@status = {}
     class << self
       def update(username)
         return if username.blank?
 
         key = username.downcase.to_sym
-        if @@status.key? key
-          @@status[key]['failed_count'] += 1
-          @@status[key]['updated_at'] = Time.now
+        if @@status.key?(key)
+          @@status[key][:failed_count] += 1
+          @@status[key][:updated_at] = Time.now
         else
           @@status[key] = {
             failed_count: 1,
@@ -19,7 +19,11 @@ module RedmineLoginAttemptsLimit
 
       def failed_count(username)
         key = username.downcase.to_sym
-        @@status.key? key ? @status[key]['failed_count'] : 0
+        if @@status.key?(key)
+          @@status[key][:failed_count]
+        else
+          0
+        end
       end
 
       def attempts_limit
@@ -42,7 +46,7 @@ module RedmineLoginAttemptsLimit
 
       def clean_expired
         expire = Time.now - (Setting.plugin_redmine_login_attempts_limit['block_minutes'].to_i * 60)
-        @@status.delete_if { |_k, v| v['updated_at'] < expire }
+        @@status.delete_if { |_k, v| v[:updated_at] < expire }
       end
     end
   end

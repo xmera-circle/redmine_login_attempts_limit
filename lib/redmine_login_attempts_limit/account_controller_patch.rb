@@ -20,7 +20,7 @@ module RedmineLoginAttemptsLimit
 
     def invalid_credentials_with_login_attempts_limit
       InvalidAccounts.update(params[:username])
-      if Setting.plugin_redmine_login_attempts_limit[:blocked_notification]
+      if Setting.plugin_redmine_login_attempts_limit['blocked_notification']
         if InvalidAccounts.blocked? params[:username]
           user = User.find_by(login: params[:username])
           Mailer.account_blocked(user).deliver unless user.nil?

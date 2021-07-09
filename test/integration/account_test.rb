@@ -26,7 +26,7 @@ class AccountTest < Redmine::IntegrationTest
     get '/login'
     3.times { post '/login', params: { username: 'admin', password: '' } }
     post '/login', params: { username: 'admin', password: 'admin' }
+    assert_select '.flash', text: /Access blocked, please try again later./
     assert_nil session[:user_id]
-    assert_template 'account/login'
   end
 end

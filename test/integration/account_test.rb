@@ -11,40 +11,22 @@ class AccountTest < Redmine::IntegrationTest
   end
 
   def teardown
-    RedmineLoginAttemptsLimit::InvalidAccounts.clear
+    InvalidAccount.new.clear
   end
 
   def test_login
-    skip
     get '/login'
-    2.times { post '/login', username: 'admin', password: '' }
-    post '/login', username: 'admin', password: 'admin'
+    2.times { post '/login', params: { username: 'admin', password: '' } }
+    post '/login', params: { username: 'admin', password: 'admin' }
     assert_equal 'admin', User.find(session[:user_id]).login
-    assert_equal 0, RedmineLoginAttemptsLimit::InvalidAccounts.failed_count('admin')
+    assert_equal 0, InvalidAccount.new('admin').failed_count
   end
 
-  def test_login_block
-    skip
+  def test_blocked_login
     get '/login'
-    3.times { post '/login', username: 'admin', password: '' }
-    post '/login', username: 'admin', password: 'admin'
+    3.times { post '/login', params: { username: 'admin', password: '' } }
+    post '/login', params: { username: 'admin', password: 'admin' }
     assert_nil session[:user_id]
     assert_template 'account/login'
-  end
-
-  def test_lost_password
-    skip
-    get '/login'
-    3.times { post '/login', username: 'admin', password: '' }
-
-    Token.delete_all
-    get '/account/lost_password'
-    post '/account/lost_password', mail: 'admin@somenet.foo'
-
-    token = Token.first
-    get '/account/lost_password', token: token.value
-    post '/account/lost_password',
-         token: token.value, new_password: 'newpass123', new_password_confirmation: 'newpass123'
-    assert_equal 0, RedmineLoginAttemptsLimit::InvalidAccounts.failed_count('admin')
   end
 end

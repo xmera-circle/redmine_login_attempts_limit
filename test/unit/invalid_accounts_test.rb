@@ -61,12 +61,12 @@ class InvalidAccountTest < ActiveSupport::TestCase
     barney_m = invalid_user_barney_m
     barney_m.update
 
-    fred.clear
+    fred.clear(:fred)
     assert_not InvalidAccount.status.key? :fred
     assert_equal 2, InvalidAccount.status.count
 
-    bob.clear
-    barney_m.clear
+    bob.clear(:bob)
+    barney_m.clear(:barneym)
     assert_empty InvalidAccount.status
   end
 

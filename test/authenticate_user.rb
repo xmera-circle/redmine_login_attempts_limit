@@ -39,7 +39,6 @@ module RedmineLoginAttemptsLimit
     end
 
     def user_session_id
-    byebug
       session[:user_id]
     end
 

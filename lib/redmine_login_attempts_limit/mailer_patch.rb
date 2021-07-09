@@ -2,7 +2,7 @@
 
 module RedmineLoginAttemptsLimit
   module MailerPatch
-    def account_blocked(user)
+    def account_blocked(_user)
       # inform admins only - avoid spam to other users
       # TODO: make it configurable
       # @user = user

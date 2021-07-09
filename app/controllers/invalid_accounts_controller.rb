@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
 class InvalidAccountsController < ApplicationController
-  layout 'admin'
-  self.main_menu = false
-
   before_action :require_admin
-  require_sudo_mode :clear
 
   def clear
     empty = InvalidAccount.new.clear

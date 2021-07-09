@@ -8,19 +8,19 @@ class InvalidAccountsControllerTest < ActionDispatch::IntegrationTest
   fixtures :users
 
   test 'anonymous user should not be authorized to clear login attempts' do
-    post '/redmine_login_attempts_limit/clear', xhr: true
-    assert_response :unauthorized
+    get '/login_attempts_limit/clear'
+    assert_response 302
   end
 
-  def test_clear_admin
+  test 'admin user should be authorized to clear login attempts' do
     log_user('admin', 'admin')
-    post '/redmine_login_attempts_limit/clear', xhr: true
-    assert_response :success
+    get '/login_attempts_limit/clear'
+    assert_redirected_to plugin_settings_path(:redmine_login_attempts_limit)
   end
 
-  def test_clear_registered_user
+  test 'loged in user should not be authorized to clear login attempts' do
     log_user('jsmith', 'jsmith')
-    post '/redmine_login_attempts_limit/clear', xhr: true
+    get '/login_attempts_limit/clear'
     assert_response :forbidden
   end
 end

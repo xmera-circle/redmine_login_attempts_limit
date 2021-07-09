@@ -1,60 +1,68 @@
 # frozen_string_literal: true
 
+require_relative 'invalid_account'
+
 module RedmineLoginAttemptsLimit
   module AccountControllerPatch
-    def self.included(base)
-      base.class_eval do
-        alias_method_chain :password_authentication, :login_attempts_limit
-        alias_method_chain :invalid_credentials, :login_attempts_limit
-        alias_method_chain :successful_authentication, :login_attempts_limit
-        alias_method_chain :lost_password, :login_attempts_limit
-      end
-    end
-
-    def password_authentication_with_login_attempts_limit
-      InvalidAccounts.clean_expired
-      if InvalidAccounts.blocked? username
+    ##
+    # @override AccountController#password_authentication
+    #
+    def password_authentication
+      InvalidAccount.clean_expired
+      if invalid_account.blocked?
         flash.now[:error] = l('errors.blocked')
       else
-        password_authentication_without_login_attempts_limit
+        super
       end
     end
 
-    def invalid_credentials_with_login_attempts_limit
-      InvalidAccounts.update(username)
-      if Setting.plugin_redmine_login_attempts_limit['blocked_notification'] && (InvalidAccounts.blocked? username)
-        user = User.find_by(login: username)
-        Mailer.account_blocked(user).deliver unless user.nil?
-      end
-      invalid_credentials_without_login_attempts_limit
-      flash.now[:error] = l('errors.blocked') if InvalidAccounts.blocked? username
+    ##
+    # @override AccountController#invalid_credentials
+    #
+    def invalid_credentials
+      invalid_account.update
+      Mailer.account_blocked(user).deliver if notification? && invalid_account.blocked? && user.present?
+      super
+      flash.now[:error] = l('errors.blocked') if invalid_account.blocked?
     end
 
-    def successful_authentication_with_login_attempts_limit(user)
-      InvalidAccounts.clear(user.login)
-      successful_authentication_without_login_attempts_limit(user)
-    end
-
-    def lost_password_with_login_attempts_limit
-      if Setting.lost_password? && request.post?
-        user = token&.user
-        if user&.active? && !token.expired?
-          user.password = params[:new_password]
-          user.password_confirmation = params[:new_password_confirmation]
-          InvalidAccounts.clear(user.login) if user.valid?
-        end
-      end
-      lost_password_without_login_attempts_limit
+    ##
+    # @override AccountController#successful_authentication
+    #
+    # Better use the call_hook below!
+    # call_hook(:controller_account_success_authentication_after, {:user => user})
+    #
+    def successful_authentication(user)
+      invalid_account.clear(user.login)
+      super
     end
 
     private
+
+    def user
+      @user = User.find_by(login: username)
+    end
+
+    def invalid_account
+      @invalid_account = InvalidAccount.new(username)
+    end
 
     def username
       params[:username]
     end
 
-    def tocken
+    def token
       Token.find_token('recovery', params[:token].to_s)
     end
+
+    def notification?
+      Setting.plugin_redmine_login_attempts_limit['blocked_notification']
+    end
+  end
+end
+
+Rails.configuration.to_prepare do
+  unless AccountController.included_modules.include?(RedmineLoginAttemptsLimit::AccountControllerPatch)
+    AccountController.prepend RedmineLoginAttemptsLimit::AccountControllerPatch
   end
 end

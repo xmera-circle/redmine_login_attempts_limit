@@ -2,23 +2,25 @@
 
 require File.expand_path('../test_helper', __dir__)
 
-class InvalidAccountsControllerTest < ActionController::TestCase
+class InvalidAccountsControllerTest < ActionDispatch::IntegrationTest
+  include RedmineLoginAttemptsLimit::AuthenticateUser
+
   fixtures :users
 
-  def setup
-    User.current = nil
+  test 'anonymous user should not be authorized to clear login attempts' do
+    post '/redmine_login_attempts_limit/clear', xhr: true
+    assert_response :unauthorized
   end
 
-  def test_clear
-    xhr :post, :clear
-    assert_response :unauthorized
-
-    @request.session[:user_id] = 1
-    xhr :post, :clear
+  def test_clear_admin
+    log_user('admin', 'admin')
+    post '/redmine_login_attempts_limit/clear', xhr: true
     assert_response :success
+  end
 
-    @request.session[:user_id] = 2
-    xhr :post, :clear
+  def test_clear_registered_user
+    log_user('jsmith', 'jsmith')
+    post '/redmine_login_attempts_limit/clear', xhr: true
     assert_response :forbidden
   end
 end

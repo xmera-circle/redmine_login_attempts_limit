@@ -2,76 +2,114 @@
 
 require File.expand_path('../test_helper', __dir__)
 
-module RedmineLoginAttemptsLimit
-  module InvalidAccounts
-    mattr_accessor :status
-  end
-end
-
-class InvalidAccountsTest < ActiveSupport::TestCase
-  include RedmineLoginAttemptsLimit
-
+class InvalidAccountTest < ActiveSupport::TestCase
   def setup
-    Setting.plugin_redmine_login_attempts_limit[:attempts_limit] = '3'
-    Setting.plugin_redmine_login_attempts_limit[:block_minutes]  = '60'
+    @plugin = Redmine::Plugin.find(:redmine_login_attempts_limit)
+    Setting.define_plugin_setting(@plugin)
+    @setting = Setting.plugin_redmine_login_attempts_limit
+    @setting[:attempts_limit] = 3
+    @setting[:block_minutes]  = 60
   end
 
   def teardown
-    InvalidAccounts.clear
+    clear_invalid_accounts
+    @setting = nil
+    @plugin = nil
+    Setting.plugin_redmine_login_attempts_limit = {}
   end
 
   def test_update
-    InvalidAccounts.update('admin')
-    assert_equal 1, InvalidAccounts.status[:admin][:failed_count]
-    assert_kind_of Time, InvalidAccounts.status[:admin][:updated_at]
+    admin = invalid_user_admin
+    admin.update
+    assert_equal 1, admin.status[:admin][:failed_count]
+    assert_kind_of Time, admin.status[:admin][:updated_at]
 
-    InvalidAccounts.update('admin')
-    assert_equal 2, InvalidAccounts.status[:admin][:failed_count]
+    admin.update
+    assert_equal 2, admin.status[:admin][:failed_count]
   end
 
   def test_failed_count
-    InvalidAccounts.update('admin')
-    assert_equal 1, InvalidAccounts.failed_count('admin')
-    assert_equal 0, InvalidAccounts.failed_count('user')
+    admin = invalid_user_admin
+    admin.update
+    assert_equal 1, admin.failed_count
+    assert_equal 0, invalid_user_bob.failed_count
   end
 
   def test_attempts_limit
-    Setting.plugin_redmine_login_attempts_limit[:attempts_limit] = '10'
-    assert_equal 10, InvalidAccounts.attempts_limit
+    @setting[:attempts_limit] = 10
+    assert_equal 10, invalid_account.attempts_limit
 
-    Setting.plugin_redmine_login_attempts_limit[:attempts_limit] = '0'
-    assert_equal 1, InvalidAccounts.attempts_limit
+    @setting[:attempts_limit] = 0
+    assert_equal 1, invalid_account.attempts_limit
   end
 
   def test_blocked?
-    3.times { InvalidAccounts.update('user') }
-    assert InvalidAccounts.blocked?('user')
+    bob = invalid_user_bob
+    3.times { bob.update }
+    assert bob.blocked?
 
-    2.times { InvalidAccounts.update('admin') }
-    assert_not InvalidAccounts.blocked?('admin')
+    admin = invalid_user_admin
+    2.times { admin.update }
+    assert_not admin.blocked?
   end
 
   def test_clear
-    InvalidAccounts.update('user1')
-    InvalidAccounts.update('user2')
-    InvalidAccounts.update('user3')
+    bob = invalid_user_bob
+    bob.update
+    fred = invalid_user_fred
+    fred.update
+    barney_m = invalid_user_barney_m
+    barney_m.update
 
-    InvalidAccounts.clear('user2')
-    assert_not InvalidAccounts.status.key?(:user2)
-    assert_equal 2, InvalidAccounts.status.count
+    fred.clear
+    assert_not InvalidAccount.status.key? :fred
+    assert_equal 2, InvalidAccount.status.count
 
-    InvalidAccounts.clear
-    assert_empty InvalidAccounts.status
+    bob.clear
+    barney_m.clear
+    assert_empty InvalidAccount.status
   end
 
   def test_clean_expired
-    InvalidAccounts.update('user1')
-    InvalidAccounts.update('user2')
-    InvalidAccounts.update('user3')
+    bob = invalid_user_bob
+    bob.update
+    fred = invalid_user_fred
+    fred.update
+    barney_m = invalid_user_barney_m
+    barney_m.update
 
-    InvalidAccounts.status[:user2][:updated_at] -= (60 * 60) + 1
-    InvalidAccounts.clean_expired
-    assert_not InvalidAccounts.status.key?(:user2)
-    assert_equal 2, InvalidAccounts.status.count
+    InvalidAccount.status[:fred][:updated_at] -= (60 * 60) + 1
+    InvalidAccount.clean_expired
+    assert_not InvalidAccount.status.key? :fred
+    assert_equal 2, InvalidAccount.status.count
+  end
+
+  private
+
+  def invalid_user_admin
+    invalid_account('admin')
+  end
+
+  def invalid_user_bob
+    invalid_account('Bob') # user1
+  end
+
+  def invalid_user_fred
+    invalid_account('Fred') # user2
+  end
+
+  def invalid_user_barney_m
+    invalid_account('BarneyM') # user3
+  end
+
+  def invalid_account(username = nil)
+    InvalidAccount.new(username)
+  end
+
+  def clear_invalid_accounts
+    invalid_user_admin.clear
+    invalid_user_bob.clear
+    invalid_user_fred.clear
+    invalid_user_barney_m.clear
   end
 end

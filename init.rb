@@ -1,5 +1,7 @@
-Mailer.send(:include, RedmineLoginAttemptsLimit::MailerPatch)
-AccountController.send(:include, RedmineLoginAttemptsLimit::AccountControllerPatch)
+# frozen_string_literal: true
+
+Mailer.include RedmineLoginAttemptsLimit::MailerPatch
+AccountController.include RedmineLoginAttemptsLimit::AccountControllerPatch
 
 Redmine::Plugin.register :redmine_login_attempts_limit do
   name 'LoginAttemptsLimit'

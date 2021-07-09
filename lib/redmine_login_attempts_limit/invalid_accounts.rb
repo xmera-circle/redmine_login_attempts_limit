@@ -1,16 +1,23 @@
+# frozen_string_literal: true
+
 module RedmineLoginAttemptsLimit
   module InvalidAccounts
-    @@status = {}
     class << self
+      attr_reader :status
+
+      def status=(value = {})
+        @status = value
+      end
+
       def update(username)
         return if username.blank?
 
         key = username.downcase.to_sym
-        if @@status.key?(key)
-          @@status[key][:failed_count] += 1
-          @@status[key][:updated_at] = Time.now
+        if status.key?(key)
+          status[key][:failed_count] += 1
+          status[key][:updated_at] = Time.now
         else
-          @@status[key] = {
+          status[key] = {
             failed_count: 1,
             updated_at: Time.now
           }
@@ -19,8 +26,8 @@ module RedmineLoginAttemptsLimit
 
       def failed_count(username)
         key = username.downcase.to_sym
-        if @@status.key?(key)
-          @@status[key][:failed_count]
+        if status.key?(key)
+          status[key][:failed_count]
         else
           0
         end
@@ -37,16 +44,16 @@ module RedmineLoginAttemptsLimit
 
       def clear(username = nil)
         if username.nil?
-          @@status = {}
+          self.status = {}
         else
           key = username.downcase.to_sym
-          @@status.delete(key)
+          status.delete(key)
         end
       end
 
       def clean_expired
         expire = Time.now - (Setting.plugin_redmine_login_attempts_limit['block_minutes'].to_i * 60)
-        @@status.delete_if { |_k, v| v[:updated_at] < expire }
+        status.delete_if { |_k, v| v[:updated_at] < expire }
       end
     end
   end

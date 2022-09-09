@@ -15,6 +15,6 @@
   <% end %>
 
   <%= tag.p do%>
-    <%= button_to "Zähler zurücksetzen", login_attempts_limit_clear_path, method: :get, data: { confirm: l(:text_are_you_sure) }, class: 'reset-counter-button' %>
+    <%= button_to l(:button_reset_counter), login_attempts_limit_clear_path, method: :get, data: { confirm: l(:text_are_you_sure) }, class: 'reset-counter-button' %>
   <% end %>
 

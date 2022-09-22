@@ -15,7 +15,6 @@
   <% end %>
 
   <%= tag.p do%>
-    <%= content_tag :label, l(:couter_of_blocked_attempts) %>
-    <%= link_to l(:button_clear).downcase, login_attempts_limit_clear_path, method: :get, data: { confirm: l(:text_are_you_sure) } %>
+    <%= button_to l(:button_reset_counter), login_attempts_limit_clear_path, method: :get, data: { confirm: l(:text_are_you_sure) }, class: 'reset-counter-button' %>
   <% end %>
 

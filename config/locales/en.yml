@@ -4,7 +4,7 @@ en:
   attempts_limit: Permitted attempts
   block_minutes: Blocked in minutes
   blocked_notification: Send mail
-  couter_of_blocked_attempts: Counter
+  button_reset_counter: Reset Counter
   errors:
     blocked: Access blocked. Please try again later.
   mailer:

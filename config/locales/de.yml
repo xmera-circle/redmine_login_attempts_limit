@@ -4,7 +4,7 @@ de:
   attempts_limit: Erlaubte Versuche
   block_minutes: Gesperrt in Minuten
   blocked_notification: E-Mail Benachrichtigung senden
-  couter_of_blocked_attempts: Zähler
+  button_reset_counter: Zähler zurücksetzen
   errors:
     blocked: Zugang blockiert. Bitte versuchen Sie es später wieder.
   mailer:

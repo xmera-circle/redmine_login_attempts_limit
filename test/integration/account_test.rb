@@ -13,7 +13,7 @@ class AccountTest < Redmine::IntegrationTest
   end
 
   def teardown
-    InvalidAccount.new.clear
+    InvalidAccount.clear
   end
 
   def test_login

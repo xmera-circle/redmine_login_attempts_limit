@@ -18,6 +18,10 @@ class InvalidAccount
       status.delete_if { |_key, value| value[:updated_at] < expire }
     end
 
+    def clear
+      self.status = {}
+    end
+
     private
 
     def expire
@@ -34,7 +38,7 @@ class InvalidAccount
   end
 
   def initialize(username = nil)
-    @username = username
+    self.username = username
   end
 
   def update
@@ -71,8 +75,8 @@ class InvalidAccount
   # @params login [Symbol] The login name of an identified user.
   #
   def clear(login = nil)
-    return status = {} unless login
-    return status unless status.presence
+    return {} unless login
+    return {} unless status.presence
 
     status.delete(login.to_sym)
   end

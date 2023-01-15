@@ -1,22 +1,35 @@
 # frozen_string_literal: true
 
+##
+# Store user related data of login attempts without requesting the db.
+#
 class InvalidAccount
+  include RedmineLoginAttemptsLimit::PluginSettings
+
   class_attribute :status
   self.status = {}
 
   class << self
+    include RedmineLoginAttemptsLimit::PluginSettings
+
     def clean_expired
-      status.delete_if { |_k, v| v[:updated_at] < expire }
+      return if status.blank?
+
+      status.delete_if { |_key, value| value[:updated_at] < expire }
     end
 
     private
 
     def expire
-      Time.now - minutes * 60
+      now - minutes * 60
     end
 
     def minutes
-      Setting.plugin_redmine_login_attempts_limit[:block_minutes].to_i
+      setting[:block_minutes].to_i
+    end
+
+    def now
+      Time.now
     end
   end
 
@@ -27,20 +40,20 @@ class InvalidAccount
   def update
     return if user_key.blank?
 
-    if InvalidAccount.status.key?(user_key)
-      InvalidAccount.status[user_key][:failed_count] += 1
-      InvalidAccount.status[user_key][:updated_at] = Time.now
+    if status.key?(user_key)
+      status[user_key][:failed_count] += 1
+      status[user_key][:updated_at] = now
     else
       status[user_key] = {
         failed_count: 1,
-        updated_at: Time.now
+        updated_at: now
       }
     end
   end
 
   def failed_count
-    if InvalidAccount.status.key?(user_key)
-      InvalidAccount.status[user_key][:failed_count]
+    if status.key?(user_key)
+      status[user_key][:failed_count]
     else
       0
     end
@@ -58,14 +71,23 @@ class InvalidAccount
   # @params login [Symbol] The login name of an identified user.
   #
   def clear(login = nil)
-    return InvalidAccount.status = {} unless login
+    return status = {} unless login
+    return status unless status.presence
 
-    InvalidAccount.status.delete(login.to_sym)
+    status.delete(login.to_sym)
   end
 
   private
 
   attr_accessor :username
+
+  def status
+    self.class.status
+  end
+
+  def now
+    self.class.send(:now)
+  end
 
   def user_key
     return unless username
@@ -74,6 +96,6 @@ class InvalidAccount
   end
 
   def limit
-    Setting.plugin_redmine_login_attempts_limit[:attempts_limit].to_i
+    setting[:attempts_limit].to_i
   end
 end

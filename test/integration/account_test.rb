@@ -3,10 +3,12 @@
 require File.expand_path('../test_helper', __dir__)
 
 class AccountTest < Redmine::IntegrationTest
+  include RedmineLoginAttemptsLimit::PluginSettings
+
   fixtures :users, :email_addresses
 
   def setup
-    Setting.plugin_redmine_login_attempts_limit[:attempts_limit] = '3'
+    setting[:attempts_limit] = '3'
     User.anonymous
   end
 

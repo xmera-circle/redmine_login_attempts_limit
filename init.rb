@@ -3,7 +3,7 @@
 require File.expand_path('lib/redmine_login_attempts_limit', __dir__)
 
 Redmine::Plugin.register :redmine_login_attempts_limit do
-  name 'LoginAttemptsLimit'
+  name 'Login Attempts Limit'
   author 'midnightSuyama, Liane Hampe, xmera Solutions GmbH'
   description 'Login attempts limit plugin for Redmine'
   version '1.0.2'

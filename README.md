@@ -74,11 +74,12 @@ In case you like to improve the code, please create a pull request on GitHub. Bi
 
 ## History
 
-The original author of the plugin is midnightSuyama <https://github.com/midnightSuyama/redmine_login_attempts_limit>. He stopps maintaining the plugin in 2017.
+The original author of the plugin is midnightSuyama <https://github.com/midnightSuyama/redmine_login_attempts_limit>. He stopped maintaining the plugin in 2017.
 
-Stefan Zieger maintained it in 2020 but also stopped to contribute to the community.
+Stefan Zieger maintained it in 2020 but also stopped to contribute to the community. We forked the plugin from Stefan Zieger <https://github.com/RegioHelden/redmine_login_attempts_limit>.
 
-Many thanks to the author and contributors for their important work!
+Many thanks to the author and contributors for their important work to make
+Redmine a little bit safer!
 
 ## License
 

@@ -2,13 +2,13 @@
 
 Login attempts limit plugin for Redmine
 
-![Redmine Plugin Version](https://img.shields.io/badge/Redmine_Plugin-v0.1.0-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v5.0.x-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important)
+![Redmine Plugin Version](https://img.shields.io/badge/Redmine_Plugin-v1.0.3-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v5.0.x-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important)
 
 The Redmine Login Attempts Limit plugin is a Redmine plugin. It blocks login attempts after x trials for y minutes.
 
 —
 
-– Screenshoot–
+![Access blocked](https://circle.xmera.de/attachments/download/259/clipboard-202301171504-bxsd7.png)
 
 ## Usage example
 

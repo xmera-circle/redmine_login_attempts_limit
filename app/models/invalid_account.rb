@@ -52,7 +52,7 @@ class InvalidAccount
   end
 
   def attempts_limit
-    limit > 1 ? limit : 1
+    [limit, 1].max
   end
 
   def blocked?

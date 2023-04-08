@@ -6,10 +6,10 @@ Redmine::Plugin.register :redmine_login_attempts_limit do
   name 'Login Attempts Limit'
   author 'midnightSuyama, Liane Hampe, xmera Solutions GmbH'
   description 'Login attempts limit plugin for Redmine'
-  version '1.0.2'
+  version '1.0.3'
   url 'https://github.com/xmera-circle/redmine_news_notification'
 
-  requires_redmine_plugin :advanced_plugin_helper, version_or_higher: '0.2.0'
+  requires_redmine_plugin :advanced_plugin_helper, version_or_higher: '0.4.0'
 
   settings default: {
     attempts_limit: 6,

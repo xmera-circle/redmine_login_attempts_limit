@@ -2,19 +2,26 @@
 
 Login attempts limit plugin for Redmine
 
-![Redmine Plugin Version](https://img.shields.io/badge/Redmine_Plugin-v0.1.0-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v5.0.x-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important)
+![Redmine Plugin Version](https://img.shields.io/badge/Redmine_Plugin-v1.0.3-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v5.0.z-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important) ![develop](https://github.com/xmera-circle/redmine_login_attempts_limit/actions/workflows/5-0-stable.yml/badge.svg)
 
 The Redmine Login Attempts Limit plugin is a Redmine plugin. It blocks login attempts after x trials for y minutes.
 
 —
 
-– Screenshoot–
+![Access blocked](https://circle.xmera.de/attachments/download/259/clipboard-202301171504-bxsd7.png)
 
 ## Usage example
 
 Navigate to the plugin settings `Administration » Configuration » Plugins » Login Attempts Limit` and edit the default settings if required.
 
 For more examples and usage, please refer to the [official documentation](https://circle.xmera.de/projects/redmine-login-attempts-limit/wiki).
+
+### Dependencies
+
+To run the plugin you need the following dependencies installed:
+
+* [Redmine 5.0.z](https://github.com/redmine/redmine)
+* [Advanced Plugin Helper 0.4.z ](https://github.com/xmera-circle/advanced_plugin_helper)
 
 ## Installation
 

@@ -1,20 +1,56 @@
+AllCops:
+  NewCops: enable
+  DisplayCopNames: true
+  DisplayStyleGuide: true
+  TargetRubyVersion: 2.7
+
+  Exclude:
+    - '**/vendor/**/*'
+    - '**/tmp/**/*'
+    - '**/bin/**/*'
+    - '**/extra/**/*'
+    - '**/lib/generators/**/templates/*'
+    - '**/lib/tasks/**/*'
+    - '**/files/**/*'
+    - '**/test/**/*'
+    - '**/db/migrate/*'
+    - 'db/schema.rb'
+
+require:
+  - rubocop-performance
+  - rubocop-rails
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+  EnforcedStyle: always
+  Exclude:
+    - 'db/**/*.rb'
+    - 'Gemfile'
+    - 'Rakefile'
+
 Metrics/AbcSize:
-  Max: 22
-
-Metrics/BlockNesting:
-  Max: 4
-
-Metrics/CyclomaticComplexity:
-  Max: 8
+  Exclude:
+    - 'test/**/*'
 
 Metrics/MethodLength:
-  Max: 12
+  Exclude:
+    - 'test/**/*'
 
-Metrics/PerceivedComplexity:
-  Max: 8
-
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
 
-Documentation:
+Style/Documentation:
   Enabled: false
+
+Style/Encoding:
+  Enabled: false
+
+Layout/TrailingWhitespace:
+  AllowInHeredoc: true
+
+Rails/ApplicationRecord:
+  Enabled: false
+
+Naming/VariableNumber:
+  Exclude:
+    - 'test/**/*'

@@ -4,7 +4,7 @@ class InvalidAccountsController < ApplicationController
   before_action :require_admin
 
   def clear
-    empty = InvalidAccount.new.clear
+    empty = InvalidAccount.clear
     if empty.blank?
       flash[:notice] = l(:notice_successful_update)
     else

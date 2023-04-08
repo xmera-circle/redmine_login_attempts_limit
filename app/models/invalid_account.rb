@@ -25,7 +25,7 @@ class InvalidAccount
     private
 
     def expire
-      now - minutes * 60
+      now - (minutes * 60)
     end
 
     def minutes
@@ -33,7 +33,7 @@ class InvalidAccount
     end
 
     def now
-      Time.now
+      Time.zone.now
     end
   end
 
@@ -44,27 +44,15 @@ class InvalidAccount
   def update
     return if user_key.blank?
 
-    if status.key?(user_key)
-      status[user_key][:failed_count] += 1
-      status[user_key][:updated_at] = now
-    else
-      status[user_key] = {
-        failed_count: 1,
-        updated_at: now
-      }
-    end
+    user_registered? ? update_status_user_key : add_user_key_to_status
   end
 
   def failed_count
-    if status.key?(user_key)
-      status[user_key][:failed_count]
-    else
-      0
-    end
+    user_registered? ? status[user_key][:failed_count] : 0
   end
 
   def attempts_limit
-    limit > 1 ? limit : 1
+    [limit, 1].max
   end
 
   def blocked?
@@ -99,7 +87,24 @@ class InvalidAccount
     username.downcase.to_sym
   end
 
+  def add_user_key_to_status
+    status[user_key] = {
+      failed_count: 1,
+      updated_at: now
+    }
+  end
+
+  def update_status_user_key
+    key = status[user_key]
+    key[:failed_count] += 1
+    key[:updated_at] = now
+  end
+
   def limit
     setting[:attempts_limit].to_i
+  end
+
+  def user_registered?
+    @user_registered ||= status.key?(user_key)
   end
 end

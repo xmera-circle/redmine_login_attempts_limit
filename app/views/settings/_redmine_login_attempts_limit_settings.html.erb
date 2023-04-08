@@ -14,7 +14,7 @@
     <%= check_box_tag 'settings[blocked_notification]', true, settings[:blocked_notification] %>
   <% end %>
 
-  <%= tag.p do%>
-    <%= button_to l(:button_reset_counter), login_attempts_limit_clear_path, method: :get, data: { confirm: l(:text_are_you_sure) }, class: 'reset-counter-button' %>
+  <%= tag.p class: 'buttons' do%>
+    <%= link_to l(:button_reset_counter), login_attempts_limit_clear_path, method: :get, data: { confirm: l(:text_are_you_sure) }, class: 'reset-counter-button' %>
   <% end %>
 

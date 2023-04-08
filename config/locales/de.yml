@@ -3,10 +3,10 @@ de:
   label_redmine_login_attempts_limit_description: Fehlgeschlagene Anmeldeversuche begrenzen und Benutzer blockieren
   attempts_limit: Erlaubte Versuche
   block_minutes: Gesperrt in Minuten
-  blocked_notification: E-Mail Benachrichtigung senden
+  blocked_notification: E-Mail Benachrichtigung an Administratoren senden
   button_reset_counter: Zähler zurücksetzen
   errors:
     blocked: Zugang blockiert. Bitte versuchen Sie es später wieder.
   mailer:
-    account_blocked_subject: Kontozugang blockiert 
-    account_blocked_body: "Kontozugang blockiert: %{login}\n\nBitte versuchen Sie es später wieder."
+    account_blocked_subject: Zu viele Anmeldeversuche » Kontozugang blockiert 
+    account_blocked_body: "Kontozugang von %{login} blockiert"

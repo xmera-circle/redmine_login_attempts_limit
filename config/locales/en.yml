@@ -3,10 +3,10 @@ en:
   label_redmine_login_attempts_limit_description: Limit failed login attempts and block user
   attempts_limit: Permitted attempts
   block_minutes: Blocked in minutes
-  blocked_notification: Send mail
-  button_reset_counter: Reset Counter
+  blocked_notification: Send mail to administrators
+  button_reset_counter: Reset counter
   errors:
     blocked: Access blocked. Please try again later.
   mailer:
-    account_blocked_subject: Access blocked 
-    account_blocked_body: "Access blocked: %{login}\n\nPlease try again later."
+    account_blocked_subject: To much login attempts » Access blocked 
+    account_blocked_body: "Access blocked for %{login}"

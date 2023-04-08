@@ -12,7 +12,7 @@ class InvalidAccountTest < ActiveSupport::TestCase
   end
 
   def teardown
-    clear_invalid_accounts
+    InvalidAccount.clear
     @setting = nil
     @plugin = nil
     Setting.plugin_redmine_login_attempts_limit = {}
@@ -21,11 +21,12 @@ class InvalidAccountTest < ActiveSupport::TestCase
   def test_update
     admin = invalid_user_admin
     admin.update
-    assert_equal 1, admin.status[:admin][:failed_count]
-    assert_kind_of Time, admin.status[:admin][:updated_at]
+    status = admin.send(:status)
+    assert_equal 1, status[:admin][:failed_count]
+    assert_kind_of Time, status[:admin][:updated_at]
 
     admin.update
-    assert_equal 2, admin.status[:admin][:failed_count]
+    assert_equal 2, status[:admin][:failed_count]
   end
 
   def test_failed_count
@@ -62,6 +63,7 @@ class InvalidAccountTest < ActiveSupport::TestCase
     barney_m.update
 
     fred.clear(:fred)
+
     assert_not InvalidAccount.status.key? :fred
     assert_equal 2, InvalidAccount.status.count
 
@@ -104,12 +106,5 @@ class InvalidAccountTest < ActiveSupport::TestCase
 
   def invalid_account(username = nil)
     InvalidAccount.new(username)
-  end
-
-  def clear_invalid_accounts
-    invalid_user_admin.clear
-    invalid_user_bob.clear
-    invalid_user_fred.clear
-    invalid_user_barney_m.clear
   end
 end
